@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clothify | Hoodies & T-Shirts</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+    body { background: #f4f4f4; color: #222; transition: 0.3s; }
+    body.dark { background: #0f0f0f; color: #eee; }
+
+    header { background: linear-gradient(90deg,#111,#333); color: #fff; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 30px; letter-spacing: 3px; }
+    nav a, nav button { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 600; background:none;border:none;cursor:pointer }
+
+    .hero { height: 75vh; background: url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1500&q=80') center/cover; display: flex; align-items: center; justify-content: center; }
+    .hero div { background: rgba(0,0,0,0.6); padding: 40px; text-align: center; color:#fff }
+    .hero h2 { font-size: 48px; letter-spacing: 2px; }
+
+    .products { padding: 60px; }
+    .products h2 { text-align:center; font-size:32px; margin-bottom:20px }
+
+    input, select { border-radius: 6px; border:1px solid #ccc }
+
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 30px; }
+    .card { background:#fff; border-radius:16px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,.12); transition:.3s }
+    .card:hover { transform: translateY(-8px) }
+    body.dark .card { background:#1b1b1b }
+    .card img { width:100%; height:260px; object-fit:cover; border-radius:14px }
+    .card h3 { margin:12px 0 }
+
+    .cart { margin:40px 60px; background:#fff; padding:30px; border-radius:14px }
+    body.dark .cart { background:#1b1b1b }
+
+    footer { background:#000; color:#aaa; text-align:center; padding:25px; margin-top:80px }
+  </style>
+</head>
+<body>
+
+  <!-- PART 1: HEADER -->
+  <header>
+    <h1>GRAYZONE</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#products">Shop</a>
+      <a href="#cart">Cart</a>
+      <button onclick="toggleDarkMode()">🌙</button>
+    </nav>
+  </header>
+
+  <!-- PART 2: HERO -->
+  <section class="hero">
+    <h2>Premium Hoodies & T-Shirts</h2>
+    <p>Style that speaks for you</p><br>
+    <button onclick="scrollToProducts()">Shop Now</button>
+  </section>
+
+  <!-- PART 3: PRODUCTS -->
+  <section class="products" id="products">
+    <h2>Our Products</h2>
+    <input type="text" id="search" placeholder="Search products..." style="padding:10px;width:100%;margin-bottom:20px" onkeyup="filterProducts()" />
+    <select id="categoryFilter" onchange="filterProducts()" style="padding:10px;margin-bottom:20px">
+      <option value="all">All</option>
+      <option value="hoodie">Hoodies</option>
+      <option value="tshirt">T-Shirts</option>
+    </select>
+    <div class="product-grid" id="productGrid"></div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1602810318383-26d7a4cc7519?auto=format&fit=crop&w=800&q=80" />
+        <h3>Grey Hoodie Oversized</h3>
+        <p>$35</p>
+        <select><option>M</option><option>L</option><option>XL</option></select>
+        <button onclick="addToCart('Grey Hoodie Oversized',35)">Add to Cart</button>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80" />
+        <h3>Dark Grey Hoodie</h3>
+        <p>$32</p>
+        <select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        <button onclick="addToCart('Dark Grey Hoodie',32)">Add to Cart</button>
+      </div>
+
+      <!-- T-SHIRTS -->
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80" />
+        <h3>White T-Shirt</h3>
+        <p>$15</p>
+        <select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        <button onclick="addToCart('White T-Shirt',15)">Add to Cart</button>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80" />
+        <h3>Black T-Shirt</h3>
+        <p>$18</p>
+        <select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        <button onclick="addToCart('Black T-Shirt',18)">Add to Cart</button>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80" />
+        <h3>Grey T-Shirt</h3>
+        <p>$17</p>
+        <select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+        <button onclick="addToCart('Grey T-Shirt',17)">Add to Cart</button>
+      </div>
+
+      <!-- NOTE: This structure is production-scalable.
+           Duplicate cards to reach 50+ products using same format -->
+    </div>
+  </section>
+
+  <!-- PART 4: CART -->
+  <section class="cart" id="cart">
+    <h2>Shopping Cart</h2>
+    <ul id="cartItems"></ul>
+    <h3>Total: $<span id="total">0</span></h3>
+    <button onclick="checkout()">Proceed to Checkout</button>
+  </section>
+
+  <!-- PART 5: FOOTER -->
+  <footer>
+    <p>© 2026 Clothify. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const products = [];
+
+const hoodieImages = [
+  'https://images.unsplash.com/photo-1618354691229-88d47f285158?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1602810318383-26d7a4cc7519?auto=format&fit=crop&w=800&q=80'
+];
+
+const tshirtImages = [
+  'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80'
+];
+
+for (let i = 1; i <= 25; i++) {
+  products.push({ name: `Grey Hoodie ${i}`, price: 30 + (i % 5), category: 'hoodie', img: hoodieImages[i % hoodieImages.length] });
+}
+for (let i = 1; i <= 25; i++) {
+  products.push({ name: `Premium T-Shirt ${i}`, price: 15 + (i % 5), category: 'tshirt', img: tshirtImages[i % tshirtImages.length] });
+}
+
+const grid = document.getElementById('productGrid');
+    function renderProducts(list) {
+  grid.innerHTML = '';
+  list.forEach(p => {
+    grid.innerHTML += `
+      <div class="card">
+        <img src="${p.img}" />
+        <h3>${p.name}</h3>
+        <p>$${p.price}</p>
+        <select>
+          <option>S</option><option>M</option><option>L</option><option>XL</option>
+        </select>
+        <button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
+      </div>`;
+  });
+}
+
+renderProducts(products);
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = 0;
+    const cartItems = document.getElementById('cartItems');
+    const totalEl = document.getElementById('total');
+
+    function renderCart() {
+      cartItems.innerHTML = '';
+      total = 0;
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} x${item.qty} - $${item.price * item.qty}`;
+        const btn = document.createElement('button');
+        btn.textContent = 'Remove';
+        btn.onclick = () => removeItem(index);
+        li.appendChild(btn);
+        cartItems.appendChild(li);
+        total += item.price * item.qty;
+      });
+      totalEl.textContent = total;
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function addToCart(name, price) {
+      const found = cart.find(p => p.name === name);
+      if (found) found.qty++;
+      else cart.push({ name, price, qty: 1 });
+      renderCart();
+    }
+
+    function removeItem(i) {
+      cart.splice(i, 1);
+      renderCart();
+    }
+
+    function checkout() {
+      if (!cart.length) return alert('Cart is empty');
+      alert('Order placed successfully!');
+      cart = [];
+      renderCart();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('dark', document.body.classList.contains('dark'));
+    }
+
+    if (localStorage.getItem('dark') === 'true') document.body.classList.add('dark');
+
+    function filterProducts() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const category = document.getElementById('categoryFilter').value;
+
+  const filtered = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search);
+    const matchesCategory = category === 'all' || p.category === category;
+    return matchesSearch && matchesCategory;
+  });
+
+  renderProducts(filtered);
+}
+
+function scrollToProducts() {
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    renderCart();
+  </script>
+
+</body>
+</html>
